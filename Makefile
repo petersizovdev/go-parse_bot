@@ -4,11 +4,11 @@ GOVER=$(shell go version | perl -nle '/(go\d\S+)/; print $$1;')
 MOCKGEN=${BINDIR}/smartimports_${GOVER}
 LINTVER=1.49.0
 LINTBIN=${BINDIR}/lint_${GOVER}_${LINTVER}
-PACKAGE=github.com/petersizovdev/go-parse_bot.git
+PACKAGE=github.com/petersizovdev/go-parse_bot
 
 all: format build test lint
 
-build: BINDIR
+build: bindir
 	go build -o ${BINDIR}/bot ${PACKAGE}
 
 test:
@@ -23,7 +23,7 @@ generate: install-mockgen
 	-destination=internal/mocks/messages/messages_mocks.go
 
 lint: install-lint
-	${LINBIN} run
+	${LINTBIN} run
 
 precomit: format build test lint
 	echo "OK"
@@ -32,7 +32,7 @@ bindir:
 	mkdir -p ${BINDIR}
 
 format: install-smartimports
-	${SMARTPORTS} -exlude internal/mocks
+	${SMARTPORTS} -exclude internal/mocks
 
 install-mockgen: bindir
 	test -f ${MOCKGEN} || \
